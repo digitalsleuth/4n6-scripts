@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # Python script to print Android Manifest permission strings from an .apk file/directory containing .apk files
 # Copyright (C) 2015 Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -146,7 +146,7 @@ def parse_apk_perms(filename, sort_by_name=False, printall=False) :
                 sorted_by_offset_keys = sorted(permsdict, key = lambda x : x)
                 for key in sorted_by_offset_keys:
                     print(filename + ":AndroidManifest.xml\t" + str(hex(key)) + "\t" + permsdict[key])
- 
+
     return
 # ends parse_apk_perms
 
@@ -160,9 +160,9 @@ parser.add_argument('-d', action="store_true", default=False, help='Prints ALL s
 args = parser.parse_args()
 
 version_string = "print_apk_perms.py v2015-06-13"
-print "\nRunning " + version_string
+print(f"\nRunning {version_string}")
 
-print("Source file = " + args.target)
+print(f"Source file = {args.target}")
 if (args.s):
     print("Output will be ordered by Permission string")
 else:

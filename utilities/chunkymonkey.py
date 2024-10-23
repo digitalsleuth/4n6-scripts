@@ -1,8 +1,8 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #
 # Python script helps find optimal chunk sizes & search algorithm when searching binary files for a known hex string.
 # Author: cheeky4n6monkey@gmail.com (Adrian Leong)
-# 
+#
 # Special Thanks to "Rob The Boss" for allowing me to share his/this idea.
 #
 # Copyright (C) 2015 Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -20,7 +20,7 @@
 # You can view the GNU General Public License at <http://www.gnu.org/licenses/>
 #
 # Example: python -m cProfile chunkymonkey test.bin 53004d00530074006500780074000000 2000000000 1000
-# Searches for the hex 53004d00530074006500780074000000 using a chunk size of 2000000000 decimal bytes 
+# Searches for the hex 53004d00530074006500780074000000 using a chunk size of 2000000000 decimal bytes
 # with a 1000 byte sized delta buffer.
 #
 # Issues: For Python 2, there's appears to be a size limitation on (chunksize + delta). It must be less than ~2147483647
@@ -39,7 +39,7 @@ import argparse
 import binascii
 import math
 
-# Find all indices of a substring in a given string (using string.find) 
+# Find all indices of a substring in a given string (using string.find)
 # From http://code.activestate.com/recipes/499314-find-all-indices-of-a-substring-in-a-given-string/
 def all_indices(bigstring, substring, listindex=[], offset=0):
     i = bigstring.find(substring, offset)
@@ -67,7 +67,7 @@ def sliceNsearch(filename, chunksize, delta, term):
     except:
         print("Problems Opening Input File")
         exctype, value = sys.exc_info()[:2]
-        print("Exception type = ",exctype,", value = ",value) 
+        print("Exception type = ",exctype,", value = ",value)
         exit(-1)
 
     stats = os.stat(filename)
@@ -75,7 +75,7 @@ def sliceNsearch(filename, chunksize, delta, term):
     begin_chunk = 0
 
     # Handle if filesize is less than CHUNK_SIZE (eg store.vol instead of image.bin)
-    # Should be able to read whole file in 1 chunk 
+    # Should be able to read whole file in 1 chunk
     if (chunksize >= stats.st_size):
         fd.seek(begin_chunk)
         raw = fd.read()
@@ -121,7 +121,7 @@ def sliceNsearchRE(filename, chunksize, delta, term):
     except:
         print("Problems Opening Input File")
         exctype, value = sys.exc_info()[:2]
-        print("Exception type = ",exctype,", value = ",value) 
+        print(f"Exception type = {exctype}, value = {value}")
         exit(-1)
 
     stats = os.stat(filename)
@@ -129,7 +129,7 @@ def sliceNsearchRE(filename, chunksize, delta, term):
     begin_chunk = 0
 
     # Handle if filesize is less than CHUNK_SIZE (eg store.vol instead of image.bin)
-    # Should be able to read whole file in 1 chunk 
+    # Should be able to read whole file in 1 chunk
     if (chunksize >= stats.st_size):
         fd.seek(begin_chunk)
         raw = fd.read()
@@ -171,7 +171,7 @@ def wholeread(filename, substring):
     except:
         print("Problems Opening Input File")
         exctype, value = sys.exc_info()[:2]
-        print("Exception type = ",exctype,", value = ",value) 
+        print(f"Exception type = {exctype}, value = {value}")
         exit(-1)
     filestring = fd.read()
     hits = all_indices(filestring, substring, [])
@@ -186,7 +186,7 @@ def wholereadRE(filename, substring):
     except:
         print("Problems Opening Input File")
         exctype, value = sys.exc_info()[:2]
-        print("Exception type = ",exctype,", value = ",value) 
+        print(f"Exception type = {exctype}, value = {value}")
         exit(-1)
     filestring = fd.read()
     pattern = re.compile(substring, re.DOTALL) # should only really call this once at start, if same substring.
@@ -196,7 +196,7 @@ def wholereadRE(filename, substring):
 
 # Main
 version_string = "chunkymonkey.py v2015-08-19"
-print("Running " + version_string + "\n")
+print(f"Running {version_string}\n")
 
 parser = argparse.ArgumentParser(description='Helps find optimal chunk sizes when searching large binary files for a known hex string')
 parser.add_argument("inputfile", help='File to be searched')
@@ -211,14 +211,14 @@ print("Search term is: " + binascii.hexlify(searchterm))
 # For benchmark monitoring (via the "-m cProfile" arg), we have each string search method called from its own function
 hits = sliceNsearch(args.inputfile, args.chunksize, args.delta, searchterm)
 rehits = sliceNsearchRE(args.inputfile, args.chunksize, args.delta, searchterm)
-print("Chunky sliceNsearch hits = " + str(len(hits)) + ", Chunky sliceNsearchRE hits = " + str(len(rehits)))
+print(f"Chunky sliceNsearch hits = {str(len(hits))}, Chunky sliceNsearchRE hits = {str(len(rehits))}")
 if (len(hits) != len(rehits)):
     print("Hit length mismatch for chunky searches!")
 else:
     # check hit offsets are same
     for jj in range(len(hits)):
         if (hits[jj] != rehits[jj]):
-            print("Chunky hit MISMATCH at index " + str(jj) + ", sliceNsearch hit at " + str(hits[jj]) + ", sliceNsearchRE hit at " + str(rehits[jj]))
+            print(f"Chunky hit MISMATCH at index {str(jj)}, sliceNsearch hit at {str(hits[jj])}, sliceNsearchRE hit at {str(rehits[jj])}")
 #        else:
 #            print("Chunky hit at index " + str(jj) + ", sliceNsearch hit at " + str(hits[jj]) + ", sliceNsearchRE hit at " + str(rehits[jj]))
 
@@ -226,7 +226,7 @@ else:
 whits = wholeread(args.inputfile, searchterm)
 # Simple read for comparison (no chunking, reads file into one big BINARY string before calling "regsearch"
 whitsre = wholereadRE(args.inputfile, searchterm)
-print("Wholeread all_indices hits = " + str(len(whits)) + ", Wholeread regsearch hits = " + str(len(whitsre)) )
+print(f"Wholeread all_indices hits = {str(len(whits))}, Wholeread regsearch hits = {str(len(whitsre))}")
 if (len(whits) != len(whitsre)):
     print("Hit length mismatch for simple searches!")
 else:
@@ -236,5 +236,3 @@ else:
             print("Simple hit MISMATCH at index " + str(jj) + ", all_indices hit at " + str(whits[jj]) + ", regsearch hit at " + str(whitsre[jj]))
 #        else:
 #            print("Simple hit at index " + str(jj) + ", all_indices hit at " + str(whits[jj]) + ", regsearch hit at " + str(whitsre[jj]))
-
-

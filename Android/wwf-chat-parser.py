@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # wwf-chat-parser.py = Extracts Android Words With Friends v7.1.4 chat data
 #
@@ -25,7 +25,7 @@ from optparse import OptionParser
 from os import path
 
 version_string = "wwf-chat-parser v2014-07-11"
-print "Running " + version_string
+print(f"Running {version_string}")
 
 usage = "Usage: %prog -d wordsframework_db -o chat_output.tsv"
 
@@ -46,19 +46,19 @@ if len(sys.argv) == 1:
 
 if (options.framewkdb == None):
     parser.print_help()
-    print "\nFramework Database filename not specified!"
+    print("\nFramework Database filename not specified!")
     exit(-1)
 
 if (options.outputtsv == None):
     parser.print_help()
-    print "\nOutput filename not specified!"
+    print("\nOutput filename not specified!")
     exit(-1)
 
 # check db file exists before trying to connect
 if path.isfile(options.framewkdb):
     chatscon = sqlite3.connect(options.framewkdb)
 else:
-    print "Specified Framework Database does not exist!"
+    print("Specified Framework Database does not exist!")
     exit(-1)
 
 chatsquery = "SELECT chat.chat_message_id, chat.game_id, chat.created_at, users.name, chat.message, chat.user_id, users.email_address, users.phone_number, users.facebook_id, users.facebook_name, users.zynga_account_id FROM chat_messages as chat, users WHERE users.user_id = chat.user_id ORDER BY chat.created_at;"
@@ -121,7 +121,7 @@ if (options.outputtsv != None):
     try:
         chatsof = open(options.outputtsv, "w")
     except:
-        print ("Trouble Opening Chat Output File For Writing")
+        print("Trouble Opening Chat Output File For Writing")
         exit(-1)
 
 # write header for contacts output file
@@ -137,7 +137,7 @@ for key in sorted_chat_keys:
         "\t" + chatsdict[key][FBNAME_DICT_IDX] + "\t" + str(chatsdict[key][ZYNGAID_DICT_IDX]) + "\n")
 
 
-print "\nExtracted " + str(len(sorted_chat_keys)) + " chat records\n"
+print(f"\nExtracted {str(len(sorted_chat_keys))} chat records\n")
 
 exit(0)
 

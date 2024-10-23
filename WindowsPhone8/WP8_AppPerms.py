@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # Python script to parse App permissions from a Windows 8.1 phone via (recursively) reading WMAppManifest.xml files.
 # The test phone was a factory reset Nokia Lumia 530.
@@ -17,7 +17,7 @@
 #
 # You can view the GNU General Public License at <http://www.gnu.org/licenses/>
 
-# Issues: 
+# Issues:
 # - Python / the XML parser (xml.etree.ElementTree) does not handle paths with commas in them (so you may need to rename your source folder structure).
 # - The XML parser also doesn't like NULLs so ensure your source files don't include file slack when you export them (ie logical contents only).
 
@@ -26,12 +26,13 @@ import sys
 import argparse
 import xml.etree.ElementTree as ET
 
-def Parse_Capabilities(filename) :
+
+def Parse_Capabilities(filename):
     tree = ET.parse(filename)
     root = tree.getroot()
-    #for child in root:
+    # for child in root:
     #    print child.tag, child.attrib
-    #ET.dump(root)
+    # ET.dump(root)
     try:
         print("App Name = " + root.find("App").get("Title"))
     except:
@@ -60,42 +61,48 @@ def Parse_Capabilities(filename) :
             print(cap.get("Name"))
     except:
         print("Error - Cannot parse Capabilities")
+
+
 # ends Parse_Capabilities function
 
 version_string = "WP8_AppPerms.py v2015-04-24"
-print "Running " + version_string
+print("Running " + version_string)
 
-parser = argparse.ArgumentParser(description="Prints Windows phone 8 Capabilities from given App Manifest XML file (or directory of files).")
+parser = argparse.ArgumentParser(
+    description="Prints Windows phone 8 Capabilities from given App Manifest XML file (or directory of files)."
+)
 parser.add_argument("target", help="File or directory of files to be parsed")
 
 args = parser.parse_args()
 
-if (os.path.isdir(args.target)):
+if os.path.isdir(args.target):
     # for each file in folder (includes subfolders)
     parsecount = 0
     for root, dirs, files in os.walk(args.target):
         for name in files:
             fullname = os.path.join(root, name)
-            if (fullname.endswith("WMAppManifest.xml")):
+            if fullname.endswith("WMAppManifest.xml"):
                 print("\nAttempting to open " + fullname)
                 try:
-                   Parse_Capabilities(fullname)
-                   parsecount += 1
-                except :
+                    Parse_Capabilities(fullname)
+                    parsecount += 1
+                except:
                     print("*** WARNING Cannot parse " + fullname + "\n")
                     exctype, value = sys.exc_info()[:2]
-                    print("Exception type = ",exctype,", value = ",value) 
-                    continue # keep looping if theres an error
+                    print("Exception type = ", exctype, ", value = ", value)
+                    continue  # keep looping if theres an error
     print("\nParsed " + str(parsecount) + " WMAppManifest.xml files")
 else:
     # must be a single file arg
     try:
         print("\nAttempting to open single file " + args.target)
         Parse_Capabilities(args.target)
-    except :
+    except:
         print("*** WARNING Cannot parse " + args.target + "\n")
         exctype, value = sys.exc_info()[:2]
-        print("Exception type = ",exctype,", value = ",value) 
+        print("Exception type = ", exctype, ", value = ", value)
 
-print("\nFor a list of Capability definitions see https://msdn.microsoft.com/en-us/library/windows/apps/jj206936%28v=vs.105%29.aspx")
+print(
+    "\nFor a list of Capability definitions see https://msdn.microsoft.com/en-us/library/windows/apps/jj206936%28v=vs.105%29.aspx"
+)
 print("\nExiting ...")

@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # Python script to extract picture content from MS Office 2007 .docx, .xlsx, .pptx files
 # Copyright (C) 2015 Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -15,9 +15,9 @@
 #
 # You can view the GNU General Public License at <http://www.gnu.org/licenses/>
 #
-# Tested on Win7 x64 & Ubuntu 14.04 x64 with Python 2.7 and MS Office 2007 .docx, .xlsx, .pptx 
+# Tested on Win7 x64 & Ubuntu 14.04 x64 with Python 2.7 and MS Office 2007 .docx, .xlsx, .pptx
 #
-# Issues: 
+# Issues:
 # - Cannot parse sub-directories containing MS Office files. It ass-umes, all Office files are in the specified
 # target directory (in a single level).
 #
@@ -59,11 +59,11 @@ def parse_docx(filename) :
             except:
                 print("Error - Cannot parse document.xml pic info")
                 exctype, value = sys.exc_info()[:2]
-                print("Exception type = ",exctype,", value = ",value) 
+                print("Exception type = ",exctype,", value = ",value)
         elif (internal_imagepath in j.filename):
             #print j.filename
             outputfilepath = os.path.join(args.destdir, filename)
-            if (not os.path.exists(outputfilepath)) : 
+            if (not os.path.exists(outputfilepath)) :
                 os.mkdir(outputfilepath)
             try:
                 # read zipped picture and write it out to destination dir
@@ -77,7 +77,7 @@ def parse_docx(filename) :
             except:
                 print("Error - Cannot write output pic")
                 exctype, value = sys.exc_info()[:2]
-                print("Exception type = ",exctype,", value = ",value) 
+                print("Exception type = ",exctype,", value = ",value)
 
     z.close()
     return
@@ -115,11 +115,11 @@ def parse_pptx(filename) :
             except:
                 print("Error - Cannot parse pic info from " + j.filename)
                 exctype, value = sys.exc_info()[:2]
-                print("Exception type = ",exctype,", value = ",value) 
+                print("Exception type = ",exctype,", value = ",value)
         elif (internal_imagepath in j.filename):
             #print j.filename
             outputfilepath = os.path.join(args.destdir, filename)
-            if (not os.path.exists(outputfilepath)) : 
+            if (not os.path.exists(outputfilepath)) :
                 os.mkdir(outputfilepath)
             try:
                 # read zipped picture and write it out to destination dir
@@ -133,7 +133,7 @@ def parse_pptx(filename) :
             except:
                 print("Error - Cannot write output pic")
                 exctype, value = sys.exc_info()[:2]
-                print("Exception type = ",exctype,", value = ",value) 
+                print("Exception type = ",exctype,", value = ",value)
 
     z.close()
     return
@@ -171,11 +171,11 @@ def parse_xlsx(filename) :
             except:
                 print("Error - Cannot parse pic info from " + j.filename)
                 exctype, value = sys.exc_info()[:2]
-                print("Exception type = ",exctype,", value = ",value) 
+                print("Exception type = ",exctype,", value = ",value)
         elif (internal_imagepath in j.filename):
             #print j.filename
             outputfilepath = os.path.join(args.destdir, filename)
-            if (not os.path.exists(outputfilepath)) : 
+            if (not os.path.exists(outputfilepath)) :
                 os.mkdir(outputfilepath)
             try:
                 # read zipped picture and write it out to destination dir
@@ -189,7 +189,7 @@ def parse_xlsx(filename) :
             except:
                 print("Error - Cannot write output pic")
                 exctype, value = sys.exc_info()[:2]
-                print("Exception type = ",exctype,", value = ",value) 
+                print("Exception type = ",exctype,", value = ",value)
 
     z.close()
     return
@@ -202,7 +202,7 @@ parser.add_argument("destdir", help='output dir')
 args = parser.parse_args()
 
 version_string = "msoffice-pic-extractor.py v2015-05-23"
-print "\nRunning " + version_string
+print("\nRunning " + version_string)
 
 print("Source file = " + args.target)
 print("Output dir = " + args.destdir)
@@ -225,7 +225,7 @@ if (os.path.isdir(args.target)):
                 except :
                     print("*** WARNING Cannot parse docx " + name + "\n")
                     exctype, value = sys.exc_info()[:2]
-                    print("Exception type = ",exctype,", value = ",value) 
+                    print("Exception type = ",exctype,", value = ",value)
                     continue # keep looping if theres an error
             elif (name.endswith(".pptx")):
                 print("\nAttempting to parse pptx = " + name)
@@ -235,7 +235,7 @@ if (os.path.isdir(args.target)):
                 except :
                     print("*** WARNING Cannot parse pptx " + name + "\n")
                     exctype, value = sys.exc_info()[:2]
-                    print("Exception type = ",exctype,", value = ",value) 
+                    print("Exception type = ",exctype,", value = ",value)
                     continue # keep looping if theres an error
             elif (name.endswith(".xlsx")):
                 print("\nAttempting to parse xlsx = " + name)
@@ -245,7 +245,7 @@ if (os.path.isdir(args.target)):
                 except :
                     print("*** WARNING Cannot parse xlsx " + name + "\n")
                     exctype, value = sys.exc_info()[:2]
-                    print("Exception type = ",exctype,", value = ",value) 
+                    print("Exception type = ",exctype,", value = ",value)
                     continue # keep looping if theres an error
     print("\nParsed " + str(parsecount) + " MS Office files")
 else:
@@ -258,7 +258,7 @@ else:
         except :
             print("*** WARNING Cannot parse docx " + args.target + "\n")
             exctype, value = sys.exc_info()[:2]
-            print("Exception type = ",exctype,", value = ",value) 
+            print("Exception type = ",exctype,", value = ",value)
     elif (args.target.endswith(".pptx")):
         print("\nAttempting to parse pptx = " + args.target)
         try:
@@ -266,7 +266,7 @@ else:
         except :
             print("*** WARNING Cannot parse pptx " + args.target + "\n")
             exctype, value = sys.exc_info()[:2]
-            print("Exception type = ",exctype,", value = ",value) 
+            print("Exception type = ",exctype,", value = ",value)
     elif (args.target.endswith(".xlsx")):
         print("\nAttempting to parse xlsx = " + args.target)
         try:
@@ -274,6 +274,6 @@ else:
         except :
             print("*** WARNING Cannot parse xlsx " + args.target + "\n")
             exctype, value = sys.exc_info()[:2]
-            print("Exception type = ",exctype,", value = ",value) 
+            print("Exception type = ",exctype,", value = ",value)
 
 

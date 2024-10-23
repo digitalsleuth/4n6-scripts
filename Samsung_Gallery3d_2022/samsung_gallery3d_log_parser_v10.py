@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # samsung_gallery3d_log_parser_v10.py = Python script to parse a Samsung com.sec.android.gallery3d's (v10) local.db log table
 #
@@ -55,11 +55,9 @@ def decode_logitem(itemstring):
                 # error generated trying to decode, keep going
                 #print("exception = " + repr(e))
                 continue
-    
     if not found:
         print("ERROR! Failed to decode path")
-    
-    return(finalstredit)    
+    return(finalstredit)
 #end decode_logitem
 
 
@@ -67,15 +65,14 @@ def process_log(logstring):
     # parse string like:
     # [DELETE_SINGE][1][0][location://albums/fileList?disableRealRatio=true&ids=-1739773001%2C984300772%2C-2131734286&quickView=true&disableTimeLine=true&fromNow=true&position=0&mediaItem=&from_expand=false][gZ2M4pePL3Pil490b+KYhXLil49h4piFZ+KYhWXimIUvZeKYhW11bOKYhWHimIV04piFZWTimIUvMC/il49EQ+KXj0nil49N4piFL+KXj0PimIVh4piFbWVy4piFYS/il48y4piFMOKYhTLimIUw4pePMOKXjznil48x4piFNOKYhV8x4piFNuKYhTU04pePMeKXjzYuauKYhXDil49nuJlMxZq]
     logentries = []
-    
     # regex from https://www.geeksforgeeks.org/python-extract-substrings-between-brackets/
     res = re.findall(r'\[.*?\]', logstring)
     numitems = len(res)
 
-    opstring = res[0].replace("[", "").replace("]", "") 
-    idx1 = res[1].replace("[", "").replace("]", "") 
-    idx2 = res[2].replace("[", "").replace("]", "") 
-    location = res[3].replace("[", "").replace("]", "") 
+    opstring = res[0].replace("[", "").replace("]", "")
+    idx1 = res[1].replace("[", "").replace("]", "")
+    idx2 = res[2].replace("[", "").replace("]", "")
+    location = res[3].replace("[", "").replace("]", "")
     if not location.startswith("location"): # filters out [EMPTY_EXPIRED][22][22][2020-05-14 00:00:00] & [MOUNTED][57][0][0][/storage/emulated/0]
         location = ""
     #print(location)
@@ -90,7 +87,7 @@ def process_log(logstring):
         #print(decoded_loc)
         timeline_pos = ' '.join(decoded_loc["location://timeline?position"]) # parse_qs returns a list
         timeline_mediaItem = ' '.join(decoded_loc["mediaItem"])
-    # eg [location://albums/fileList?id=-532863272&position=1&count=4]    
+    # eg [location://albums/fileList?id=-532863272&position=1&count=4]
     if location.startswith("location://albums/fileList?id"):
         decoded_loc = urllib.parse.parse_qs(location)
         #print(decoded_loc)
@@ -111,21 +108,21 @@ def process_log(logstring):
         b64items = []
         for idx in range(4, numitems):
             b64items.append(res[idx].replace("[", "").replace("]", "")) # items should store base64 decoded paths
-    
+
         # parse out each base64 encoded path item
-        decoded_items = []    
+        decoded_items = []
         #print("process_log = " + str(b64items))
         for b64item in b64items:
             if not (b64item.startswith("/storage/emulated/0")): # no base64 decode required if starts with this
                 decoded_item = decode_logitem(b64item)
                 decoded_items.append(decoded_item)
-    
+
         if (len(decoded_items) > 0):
             decoded_paths = ' '.join(decoded_items)
-        
+
     # almalgamate log data and return data
     logentries.append((opstring, idx1, idx2, location, timeline_pos, timeline_mediaItem, albums_id, albums_pos, albums_count, decoded_paths))
-            
+
     return(logentries)
 #end process_log
 
@@ -139,10 +136,10 @@ def main():
     args = parser.parse_args()
 
     print("Running " + version_string + "\n")
-    
+
     if not args.database or not args.output:
         parser.exit("ERROR - Input file or Output file NOT specified")
-    
+
     # Check DB file exists before trying to connect
     if path.isfile(args.database):
         dbcon = sqlite3.connect(args.database)
@@ -163,9 +160,9 @@ def main():
         __timestamp = row[2]
         __log = row[3]
 
-        # store each row returned    
+        # store each row returned
         entries.append((_id, __category, __timestamp, __log))
-        
+
         row = cursor.fetchone()
 
     cursor.close()
@@ -174,18 +171,16 @@ def main():
     # Write TSV report
     with open(args.output, "w") as outputTSV:
         outputTSV.write("__id\t__category\t__timestamp\t__log\toperation\tlocation\ttimeline_pos\ttimeline_mediaItem\talbums_id\talbums_pos\talbums_count\tbase64_decoded_paths\n")
-        
+
         for entry in entries:
             _idx = entry[0]
             __category = entry[1]
             __timestamp = entry[2]
             __log = entry[3]
-            
             print("_id = " + str(_idx))
             # logdata stores (opstring, idx1, idx2, location, timeline_pos, timeline_mediaItem, albums_id, albums_pos, albums_count, decoded_paths)
             logdata = process_log(__log)
             #print(logdata)
-            
             op = ""
             loc = ""
             time_pos = ""
@@ -202,13 +197,12 @@ def main():
                 album_id = logdata[0][6]
                 album_pos = logdata[0][7]
                 album_count = logdata[0][8]
-                decoded_paths = logdata[0][9] 
-            
+                decoded_paths = logdata[0][9]
             outputTSV.write(str(_idx) + "\t" + str(__category) + "\t" + __timestamp + "\t" + __log + \
                 "\t" + op + "\t" + loc + "\t" + time_pos + "\t" + time_item + \
                 "\t" + album_id + "\t" + album_pos + "\t" + album_count + "\t" + decoded_paths + "\n")
 
-    print("\nProcessed/Wrote " + str(len(entries)) + " entries to: " + args.output + "\n")
+    print(f"\nProcessed/Wrote {str(len(entries))} entries to: {args.output}\n")
     print("Exiting ...\n")
 
 

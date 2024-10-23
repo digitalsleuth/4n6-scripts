@@ -1,4 +1,4 @@
-
+#! /usr/bin/env python3
 # plist2db.py = Python script to extract XML/binary plist data to an SQLite Database
 #
 # Copyright (C) 2014 Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -17,7 +17,7 @@
 #
 # Version History:
 #  Initial Version - Requires plistlib from Python 3.4
-# 
+#
 # Instructions:
 # (Mandatory) Use the -f argument to specify the plist file/directory to extract from
 # (Mandatory) Use the -d argument to specify the output SQLite Database
@@ -41,7 +41,7 @@ from optparse import OptionParser
 
 rowdata = []
 
-# Recursive function populates global "rowdata" list with data from given plist object 
+# Recursive function populates global "rowdata" list with data from given plist object
 # ("obj") as initially returned by plistlib.readPlist.
 # "re-used/adapted" from:
 # http://code.activestate.com/recipes/578094-recursively-print-nested-dictionaries/
@@ -56,7 +56,7 @@ def print_object(plistfilename, obj, key = "", path = ""):
         # Handles CFDictionary
         for keyname, value in obj.items():
             p = path + "\\" + str(keyname)
-            # Call function again for each item value in dict 
+            # Call function again for each item value in dict
             # eg each key/value in dict (including sub-dicts).
             print_object(plistfilename, value, keyname, p)
     elif isinstance(obj, list):
@@ -80,11 +80,11 @@ def print_object(plistfilename, obj, key = "", path = ""):
     elif isinstance(obj, float): # Handles CFNumbers (real)
         #print("float: " + str(path) + " = " + str(obj))
         row = [plistfilename, str(path), str(obj)]
-        rowdata.extend([row])        
+        rowdata.extend([row])
     elif isinstance(obj, datetime.datetime): # CFDate extracted as Python datetime
         #print("datetime: " + str(path) + " = " + str(obj))
         row = [plistfilename, str(path), str(obj)]
-        rowdata.extend([row])    
+        rowdata.extend([row])
     elif isinstance(obj, bytes): # CFData handled/extracted as Python "bytes"
         # create hex string by printing each byte in bytes object as a 2 digit hex string
         newstr = ' '.join(["%02X" % x for x in obj])
@@ -96,7 +96,7 @@ def print_object(plistfilename, obj, key = "", path = ""):
         # If we get here, something is funky ... so make a note of it in both the DB and output
         print("*** WARNING " + str(plistfilename) + ":" + str(path) + " is an Unknown type " + str(type(obj)))
         row = [plistfilename, str(path), "*** Unknown Type ***"]
-        rowdata.extend([row]) 
+        rowdata.extend([row])
     #endelse
 #end print_object function
 
@@ -109,7 +109,7 @@ print ("Running ", version_string, "\n")
 usage = "Usage: %prog -f plist -d database"
 
 parser = OptionParser(usage=usage)
-parser.add_option("-f", dest="filename", 
+parser.add_option("-f", dest="filename",
                   action="store", type="string",
                   help="XML/Binary Plist file or directory containing Plists")
 parser.add_option("-d", dest="dbase",
@@ -150,7 +150,7 @@ else:
         print_object(options.filename, pl)
     except plistlib.InvalidFileException:
         print("*** WARNING " + options.filename + " is not a valid Plist!\n")
-    
+
 if (len(rowdata)):
     con = sqlite3.connect(options.dbase)
     # Create the table
@@ -163,4 +163,3 @@ else:
     print("No Plist items were found / Database has not been created/updated\n")
 
 exit(0)
-

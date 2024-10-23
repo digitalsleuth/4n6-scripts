@@ -5,7 +5,7 @@
 # Author: cheeky4n6monkey@gmail.com
 # Created/Tested on Ubuntu 20.04 LTS / Python 3.8.2 and Win10x64 / Python 3.6
 #
-# Thanks to @heathermahalik for her research into iOS14 Apple Maps. 
+# Thanks to @heathermahalik for her research into iOS14 Apple Maps.
 #
 
 import sys
@@ -15,7 +15,7 @@ import os
 from os import path
 
 version_string = "ios14_maps_history.py v2020-09-19"
-print("Running " + version_string + "\n")
+print(f"Running {version_string}\n")
 
 parser = argparse.ArgumentParser(description='Queries iOS 14 MapsSync_0.0.1 and extracts selected BLOBs')
 parser.add_argument("-d", "--database", action="store", required=True, help='SQLite DB filename i.e. MapsSync_0.0.1')
@@ -71,10 +71,8 @@ while row:
     llong = row[7]
     journeyblob = row[8]
     mapitemblob = row[9]
-    
-    # store each row returned    
+    # store each row returned
     entries.append((itemnum, maptype, created, modified, locsearch, loccity, lat, llong, journeyblob, mapitemblob))
-    
     row = cursor.fetchone()
 
 cursor.close()
@@ -109,21 +107,19 @@ with open(os.path.join(args.outputdir, "iOS14-MapsReport.html"), "w") as outputH
             llong = str(entry[7])
 
         jblob = "NULL"
-        jblobhtml = "NULL"      
+        jblobhtml = "NULL"
         if entry[8] is not None: # ie BLOB present
             jblob = str(itemnum) +"_journey.BLOB"
             with open(os.path.join(args.outputdir, jblob), "wb") as jblobfile:
                 jblobfile.write(entry[8])
             jblobhtml = "<a href=\"" + jblob + "\">" + jblob + "</a>"
-            
         mblob = "NULL"
-        mblobhtml = "NULL"        
+        mblobhtml = "NULL"
         if entry[9] is not None: # ie BLOB present
             mblob = str(itemnum) +"_mapitem.BLOB"
             with open(os.path.join(args.outputdir, mblob), "wb") as mblobfile:
                 mblobfile.write(entry[9])
             mblobhtml = "<a href=\"" + mblob + "\">" + mblob + "</a>"
-       
         outputHTML.write("<tr><td>" + str(itemnum) + "</td><td>" + maptype + "</td><td>" + \
                          created + "</td><td>" + modified + "</td><td>" + \
                          locsearch + "</td><td>" + loccity + "</td><td>" + \
@@ -133,8 +129,8 @@ with open(os.path.join(args.outputdir, "iOS14-MapsReport.html"), "w") as outputH
 
     outputHTML.write("</table></html>")
 
-print("Processed " + str(len(entries)) + " entries\n")
-print("Please refer to iOS14-MapsReport.html in \"" + args.outputdir + "\" directory") 
+print(f"Processed {str(len(entries))} entries\n")
+print(f"Please refer to iOS14-MapsReport.html in '{args.outputdir}' directory")
 print("Exiting ...\n")
 
 

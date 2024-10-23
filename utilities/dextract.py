@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # dextract.py = Python script to extract data according to a template definition file
 #
@@ -47,7 +47,7 @@ import pprint
 version_string = "dextract v2013-12-11 Initial Version"
 
 # Global variables for storing template definition file values
-field_names = [] # stores field_names 
+field_names = [] # stores field_names
 num_types_dict = {} # stores num_types (keyed by field_name)
 type_dict = {} # stores types (keyed by field_name)
 
@@ -61,7 +61,7 @@ def find_type_size(strg):
     elif (strg.upper() == ">D" or strg.upper() == "D" or strg.upper() == "<D"):
         return strg, 8
     elif (strg.upper() == ">F" or strg.upper() == "F" or strg.upper() == "<F"):
-        return strg, 4    
+        return strg, 4
     elif (strg.upper() == ">L" or strg.upper() == "L" or strg.upper() == "<L"):
         return strg, 4
     elif (strg.upper() == ">I" or strg.upper() == "I" or strg.upper() == "<I"):
@@ -78,7 +78,7 @@ def find_type_size(strg):
         return strg, 1
     elif ((strg.upper() == "UTF16BE") or (strg.upper() == "UTF16LE")):
         return strg, 2
-    elif ("OSX32" in strg.upper() or "UNIX32" in strg.upper() or 
+    elif ("OSX32" in strg.upper() or "UNIX32" in strg.upper() or
             "GPS32" in strg.upper() or "AOL32" in strg.upper() or
             "HFS" in strg.upper()):
         if strg.startswith(">"):
@@ -96,7 +96,7 @@ def find_type_size(strg):
     elif ("BCD12" in strg.upper()):
         return "6B", 6 # this is just a placeholder so doesn't return 0 (error)
     elif ("BCD14" in strg.upper()):
-        return "7B", 7 # this is just a placeholder so doesn't return 0 (error)        
+        return "7B", 7 # this is just a placeholder so doesn't return 0 (error)
     elif ("DOSDATE" in strg.upper()):
         return "<I", 4 # this is just a placeholder so doesn't return 0 (error)
     else:
@@ -111,22 +111,22 @@ def calc_date(val, field):
     if ("OSX32" in type_dict[field].upper()):
         # difference between 1jan1970 and 1jan2001 = 978307200 secs
         #print "OSX32 date string is: " + datetime.datetime.fromtimestamp(val + 978307200).strftime('%Y-%m-%dT%H:%M:%S')
-        try: 
+        try:
             datetimestr = datetime.datetime.fromtimestamp(val + 978307200).strftime('%Y-%m-%dT%H:%M:%S')
         except:
             datetimestr = "Unknown"
         return (datetimestr)
     elif ( ("UNIX32" in type_dict[field].upper()) or ("UNIX10DIGDEC" in type_dict[field].upper()) ):
         #print "UNIX date string is: " + datetime.datetime.fromtimestamp(val).strftime('%Y-%m-%dT%H:%M:%S')
-        try: 
+        try:
             datetimestr = datetime.datetime.fromtimestamp(val).strftime('%Y-%m-%dT%H:%M:%S')
         except:
             datetimestr = "Unknown"
-        return (datetimestr)        
+        return (datetimestr)
     elif ("GPS32" in type_dict[field].upper()):
         # difference between 1jan1970 and 6jan1980 = 315964800 secs
         #print "GPS32 date string is: " + datetime.datetime.fromtimestamp(val + 315964800).strftime('%Y-%m-%dT%H:%M:%S')
-        try: 
+        try:
             datetimestr = datetime.datetime.fromtimestamp(val + 315964800).strftime('%Y-%m-%dT%H:%M:%S')
         except:
             datetimestr = "Unknown"
@@ -134,7 +134,7 @@ def calc_date(val, field):
     elif ("AOL32" in type_dict[field].upper()):
         # difference between 1jan1970 and 1jan1980 = 315532800 secs
         #print "AOL32 date string is: " + datetime.datetime.fromtimestamp(val + 315532800).strftime('%Y-%m-%dT%H:%M:%S')
-        try: 
+        try:
             datetimestr = datetime.datetime.fromtimestamp(val + 315532800).strftime('%Y-%m-%dT%H:%M:%S')
         except:
             datetimestr = "Unknown"
@@ -142,14 +142,14 @@ def calc_date(val, field):
     elif ("HFS32" in type_dict[field].upper()):
         # difference between 1jan1904 and 1jan1970 = 2082844800 secs
         #print "HFS32 date string is: " + datetime.datetime.fromtimestamp(val - 2082844800).strftime('%Y-%m-%dT%H:%M:%S')
-        try: 
+        try:
             datetimestr = datetime.datetime.fromtimestamp(val - 2082844800).strftime('%Y-%m-%dT%H:%M:%S')
         except:
             datetimestr = "Unknown"
         return (datetimestr)
     elif ( ("UNIX48MS" in type_dict[field].upper()) or ("UNIX13DIGDEC" in type_dict[field].upper()) ):
         #print "UNIX48MS/UNIX13DIGDEC date string is: " + datetime.datetime.fromtimestamp(val/1000.0).strftime('%Y-%m-%dT%H:%M:%S')
-        try: 
+        try:
             datetimestr = datetime.datetime.fromtimestamp(val/1000.0).strftime('%Y-%m-%dT%H:%M:%S')
         except:
             datetimestr = "Unknown"
@@ -186,7 +186,7 @@ def calc_date(val, field):
             datetimestr = "Unknown"
         return (datetimestr)
     elif ("DOSDATE" in type_dict[field].upper()):
-        # For ease of processing, relies on extract_DOSdate returning an int in LE form 
+        # For ease of processing, relies on extract_DOSdate returning an int in LE form
         # (regardless of raw hex string being BE/LE)
         # The "default" LE int data struct has 2 words (in order) DATE, TIME
         # The "word swapped" LE int data struct has 2 words (in order) TIME, DATE
@@ -203,7 +203,7 @@ def calc_date(val, field):
             return ("Unknown")
         #print "datehalf = %0x" % datehalf
         #print "timehalf = %0x" % timehalf
-                
+
         ss = ( (timehalf & 0b11111)*2); #LSB 5bits (0...4) x 2 equals secs
         if (ss == 60):
             ss = 59
@@ -211,8 +211,8 @@ def calc_date(val, field):
         hh = ( ((timehalf & 0b1111100000000000) >> 11)); #5bits (11...15) equals hours
         dd = ( (datehalf & 0b11111)); #5bits (0...4) equals day
         mm = ( ((datehalf & 0b111100000) >> 5)); #4bits (5...8) equals month
-        yy = ( ((datehalf & 0b1111111000000000) >> 9)+1980); #7bits (9...16)+1980 equals year    
-        
+        yy = ( ((datehalf & 0b1111111000000000) >> 9)+1980); #7bits (9...16)+1980 equals year
+
         try:
             datetimestr = datetime.datetime(yy, mm, dd, hh, mn, ss).strftime('%Y-%m-%dT%H:%M:%S')
         except:
@@ -230,9 +230,9 @@ def extract_unix48ms(f, isLE):
     for j in range(6):
         val = struct.unpack("B", f.read(1))[0]
         stringval += ("%02x" % val)
-        
+
     stringval = "%012x" % int(stringval, 16)
-    # We should now have a hex string we can calculate a value from 
+    # We should now have a hex string we can calculate a value from
     # BE eg "013C1E44FC18" = dec 1357717503000
     # LE eg "18FC441E3C01"
     if (isLE):
@@ -254,11 +254,11 @@ def extract_unix10digdec(f):
     for j in range(5):
         val = struct.unpack("B", f.read(1))[0]
         unix_decimal_10_string += ("%02x" % val)
-    
-    try:    
+
+    try:
         unix_decimal_10_int = int(unix_decimal_10_string) # now convert string "1170245478" to decimal int
     except:
-        print "Bad int cast in extract_unix10digdec"
+       print("Bad int cast in extract_unix10digdec")
         unix_decimal_10_int = -1
     return(unix_decimal_10_int)
 #ends extract_unix10digdec
@@ -270,11 +270,11 @@ def extract_unix13digdec(f):
     for j in range(7):
         val = struct.unpack("B", f.read(1))[0]
         unix_decimal_13_string += ("%02x" % val)
-    
-    try:    
+
+    try:
         unix_decimal_13_int = int(unix_decimal_13_string) # now convert string "01170245478000" to decimal int
     except:
-        print "Bad int cast in extract_unix13digdec"
+       print("Bad int cast in extract_unix13digdec")
         unix_decimal_13_int = -1
     return(unix_decimal_13_int)
 #ends extract_unix13digdec
@@ -309,14 +309,14 @@ def extract_DOSdate(f, isLE):
     if (isLE):
         # eg date is 2007-05-04T12:09:42
         # For LE "normal" DOSDATE raw value 0x36 A4 61 35
-        # 36A4 = Date and 6135 = Time 
+        # 36A4 = Date and 6135 = Time
         # eg For LE "word swapped" DOSDATE raw value 0x61 35 36 A4
         # 36A4 = Date and 6135 = Time
         try:
             result1, result2 = struct.unpack(">HH", f.read(4))
             result = (result1 << 16) + result2
         except:
-            print "Error extracting LE DOSdate"
+           print("Error extracting LE DOSdate")
         # result retains original word order ie Date, Time for "normal" and
         # Time, Date for "word swapped"
     else:
@@ -329,10 +329,10 @@ def extract_DOSdate(f, isLE):
         # to get result in form of Date, Time for "normal" or
         # Time, Date form for "word swapped"
         try:
-            result1, result2 = struct.unpack("<HH", f.read(4)) 
+            result1, result2 = struct.unpack("<HH", f.read(4))
             result = (result2 << 16) + result1
         except:
-            print "Error extracting BE DOSdate"
+           print("Error extracting BE DOSdate")
     #consequently "result" returned should look like 0x36 A4 61 35
     # ie date then time for BE "normal" and
     # 0x61 35 36 A4 for BE "word swapped"
@@ -435,7 +435,7 @@ def extract_nullterm_string(field, f, filename):
             decodestr = "UTF-16LE"
         else:
             decodestr = "UTF-16BE"
-            
+
         while ((tmp != "\x00\x00") and (f.tell() < fileinfo.st_size)):
             tmp = f.read(2)
             if ((tmp != "\x00\x00")):
@@ -451,19 +451,19 @@ def extract_nullterm_string(field, f, filename):
             print filename + ":" + str(fieldoffset) + " " + field + " - Error extracting nullterm " + decodestr + " str field"
             value = ""
     return(value)
-#ends extract_nullterm_string    
-    
+#ends extract_nullterm_string
+
 # Function to parse each record and extract/print data according to the template file
 # returns True if record fields parsed OK, False if there were major errors parsing
 def parse_record(f, hit):
     extracted_vals = {} # local dict of numerical extracted values keyed by field name (used for storing/retrieving deferred sized strings)
     fileinfo = os.stat(filename) # used for determining filesize
-    
+
     for field in field_names:
         #check field isn't past end of file
         fieldoffset = f.tell()
         if (fieldoffset > fileinfo.st_size):
-            print "Calculated Field offset for " + field + " is greater than " + str(fileinfo.st_size) + " ... stopping"
+           print("Calculated Field offset for " + field + " is greater than " + str(fileinfo.st_size) + " ... stopping")
             return False
 
         patn, tsize = find_type_size(type_dict[field])
@@ -471,9 +471,8 @@ def parse_record(f, hit):
         # Check field type size, if 0 check it hasn't been deferred eg "msgsize"
         if (tsize == 0):
             if not (field in extracted_vals.keys()):
-                print "Bad Type declared for " + field + " ... Skipping"
+               print("Bad Type declared for " + field + " ... Skipping")
                 continue # skip to next field
-                
         if (type_dict[field].upper() == "X"): # Dont care about these X bytes ...
             skipsize = 0
             if (not num_types_dict[field].isdigit()):
@@ -482,18 +481,18 @@ def parse_record(f, hit):
             else:
                 skipsize = int(num_types_dict[field])
             if ((fieldoffset + skipsize) < fileinfo.st_size):
-                print "Skipping " + str(skipsize) + " bytes ..."
+               print("Skipping " + str(skipsize) + " bytes ...")
                 newseek = fieldoffset+ skipsize
                 f.seek(newseek)
             else:
-                print "Cannot skip " + field + " - specified offset (" + str(fieldoffset+skipsize) + ") too large!"
+               print("Cannot skip " + field + " - specified offset (" + str(fieldoffset+skipsize) + ") too large!")
                 return False # Bailout of function cos something is wrong
         elif ( (num_types_dict[field] == "0") and ((type_dict[field].upper() == "S") or (type_dict[field].upper() == "UTF16BE") or
                 (type_dict[field].upper() == "UTF16LE")) ):
             # Handle null terminated strings with unknown (ie 0) sizes, ignores unprintable chars
             unknownstring = extract_nullterm_string(field, f, filename)
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          unknownstring + "\t\n")
         elif ( (not num_types_dict[field].isdigit()) and ((type_dict[field].upper() == "S") or (type_dict[field].upper() == "UTF16BE") or
                 (type_dict[field].upper() == "UTF16LE")) ):
@@ -517,7 +516,7 @@ def parse_record(f, hit):
             datefield = calc_date(value, field)
             print filename + ":" + str(fieldoffset) + ", UNIX48MS field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         elif ("UNIX10DIGDEC" in type_dict[field].upper()):
             # Handle 10 digit decimal secs since 1JAN1970. eg 0x1170245478
@@ -525,7 +524,7 @@ def parse_record(f, hit):
             datefield = calc_date(value, field)
             print filename + ":" + str(fieldoffset) + ", UNIX10DIGDEC field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         elif ("UNIX13DIGDEC" in type_dict[field].upper()):
             # Handle 13 digit decimal ms since 1JAN1970. eg 0x1170245478000
@@ -533,7 +532,7 @@ def parse_record(f, hit):
             datefield = calc_date(value, field)
             print filename + ":" + str(fieldoffset) + ", UNIX13DIGDEC field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         elif ("BCD12" in type_dict[field].upper()):
             # Handle 6 byte 12 digit BCD date eg 071231125423 = 31DEC2007T12:54:23
@@ -541,7 +540,7 @@ def parse_record(f, hit):
             datefield = calc_date(value, field)
             print filename + ":" + str(fieldoffset) + ", BCD12 field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         elif ("BCD14" in type_dict[field].upper()):
             # Handle 7 byte 14 digit BCD date eg 020071231125423 = 31DEC2007T12:54:23
@@ -549,17 +548,17 @@ def parse_record(f, hit):
             datefield = calc_date(value, field)
             print filename + ":" + str(fieldoffset) + ", BCD14 field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         elif ("DOSDATE" in type_dict[field].upper()):
             value = extract_DOSdate(f, type_dict[field].startswith("<"))
             datefield = calc_date(value, field)
             print filename + ":" + str(fieldoffset) + ", DOSDATE field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
             if (tsvoutput):
-                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         else:
-            # handle everything else with single fields that can be "unpacked" 
+            # handle everything else with single fields that can be "unpacked"
             # ie other dates and numbers which don't require specialized interpretation
             size = int(tsize)
             try:
@@ -567,25 +566,23 @@ def parse_record(f, hit):
                 extracted_vals[field] = value # store numerical values in case we need it later eg deferred string sizes
                 #print "extracted field = " + field + "... value = " + str(value)
             except:
-                print "Error extracting data! Offset = " + str(fieldoffset) + ", Field = " + field
+               print("Error extracting data! Offset = " + str(fieldoffset) + ", Field = " + field)
                 print patn
-                return False # bailout of function. We're getting errors for the simplest case. 
-                
+                return False # bailout of function. We're getting errors for the simplest case.
             # output 32 bit int dates
             if ("OSX32" in type_dict[field].upper() or "UNIX32" in type_dict[field].upper() or
                 "GPS32" in type_dict[field].upper() or "AOL32" in type_dict[field].upper() or
                 "HFS32" in type_dict[field].upper()):
                 datefield = calc_date(value, field)
-                
                 print filename + ":" + str(fieldoffset) + ", field = " + field + ", value = " + str(value) + ", interpreted date value = " + datefield
                 if (tsvoutput):
-                    of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                    of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                              str(value) + "\t" + datefield + "\n")
             else:
                 # output other non-string / non-date values (ints, floats)
                 print filename + ":" + str(fieldoffset) + ", field = " + field + ", value = " + str(value)
                 if (tsvoutput):
-                    of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + 
+                    of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                              str(value) + "\t\n")
     return True # ie all fields for record parsed without major error
 #ends parse_record fn
@@ -600,7 +597,7 @@ parser = OptionParser(usage=usage)
 parser.add_option("-d", dest="defn",
                   action="store", type="string",
                   help="Template Definition File")
-parser.add_option("-f", dest="filename", 
+parser.add_option("-f", dest="filename",
                   action="store", type="string",
                   help="Input File To Be Searched")
 parser.add_option("-o", dest="tsvfile",
@@ -620,7 +617,7 @@ if len(sys.argv) == 1:
     exit(-1)
 if ( (options.filename == None) or (options.defn == None) ):
     parser.print_help()
-    print "\nDefinition/Input filename incorrectly specified!"
+   print("\nDefinition/Input filename incorrectly specified!")
     exit(-1)
 
 filename = options.filename
@@ -634,7 +631,7 @@ if (options.endoffset == -1): # default case ie end offset "z" was not specified
     endoffset = fileinfo.st_size
 else:
     endoffset = options.endoffset
-    
+
 #open template definition file
 try:
     tmpf = open(defnfile, "r")
@@ -681,7 +678,7 @@ while ln != "":
 tmpf.close()
 
 if (len(field_names) == 0) :
-    print "No fields specified in template definition file. Exiting"
+   print("No fields specified in template definition file. Exiting")
     exit(-1)
 
 # From startoffset until endoffset, extract the record data
@@ -691,7 +688,7 @@ f.seek(curroffset)
 while ((curroffset < endoffset) and status):
     status = parse_record(f, curroffset)
     curroffset = f.tell()
-    
+
 f.close()
 
 if (tsvoutput):

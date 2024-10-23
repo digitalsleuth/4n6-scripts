@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Author: Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -63,7 +63,7 @@ from optparse import OptionParser
 
 version_string = "imgcache-parse.py v2016-08-02"
 
-# Find all indices of a substring in a given string (Python recipe) 
+# Find all indices of a substring in a given string (Python recipe)
 # From http://code.activestate.com/recipes/499314-find-all-indices-of-a-substring-in-a-given-string/
 def all_indices(bigstring, substring, listindex=[], offset=0):
     i = bigstring.find(substring, offset)
@@ -79,18 +79,18 @@ usage = " %prog -f inputfile -o outputfile"
 
 # Handle command line args
 parser = OptionParser(usage=usage)
-parser.add_option("-f", dest="filename", 
-                  action="store", type="string",
-                  help="imgcache file to be searched")
+parser.add_option("-f", dest="filename",
+    action="store", type="string",
+    help="imgcache file to be searched")
 parser.add_option("-o", dest="htmlfile",
-                  action="store", type="string",
-                  help="HTML table File")
+    action="store", type="string",
+    help="HTML table File")
 parser.add_option("-p", dest="parsepicsonly",
-                  action="store_true", default=False,
-                  help="Parse cached picture only (do not use in conjunction with -v)")
+    action="store_true", default=False,
+    help="Parse cached picture only (do not use in conjunction with -v)")
 parser.add_option("-v", dest="parsevidsonly",
-                  action="store_true", default=False,
-                  help="Parse cached video thumbnails only (do not use in conjunction with -p)")
+    action="store_true", default=False,
+    help="Parse cached video thumbnails only (do not use in conjunction with -p)")
 (options, args) = parser.parse_args()
 
 # Check if no arguments given by user, exit

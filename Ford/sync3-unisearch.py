@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #
 # Python script to parse Ford Sync3 unifiedsearch.log for location coordinates
 # Based on test data provided by J. EDDY
@@ -29,11 +29,11 @@ def main():
 
     args = parser.parse_args()
 
-    print("Running " + version_string + "\n")
-    
+    print(f"Running {version_string}\n")
+
     locations = []
     current_dt = datetime.datetime(1970, 1, 1)
-    
+
     # Scan log file
     with open(args.inputlog, 'r') as logp:
         data = logp.readlines()
@@ -53,27 +53,27 @@ def main():
                     sec = int(timestamp[6])
                     current_dt = datetime.datetime(year, month, day, hr, min, sec)
                     print("Found Timestamp = " + current_dt.isoformat() + " at line " + str(linenum) )
-            
+
             res = re.search(r'&current_location=(.*?),(.*?)&', str(line)) #ass-ume only one current_location per line
             if not (res is None):
                 print("Found lat, long in "+ str(args.inputlog) + " at line " + str(linenum) + " : " + str(res[1]) + ", " + str(res[2]))
                 #locations.append((str(linenum), str(res[1]), str(res[2]), current_dt.strftime("%Y-%m-%d %H:%M:%S")))
                 locations.append((str(linenum), str(res[1]), str(res[2]), current_dt.isoformat()))
-    
+
     # Write TSV report
     with open(args.output, "w") as outputTSV:
         outputTSV.write("filename\tline\tlatitude\tlongitude\ttimestamp\n")
-        
+
         for loc in locations:
             linenum = loc[0]
             lat = loc[1]
             llg = loc[2]
             time = loc[3]
-            outputTSV.write(str(args.inputlog) + "\t" + linenum + "\t" + lat + "\t" + llg + "\t" + time + "\n") 
-        
-    print("\nProcessed/Wrote " + str(len(locations)) + " locations to: " + args.output + "\n")
+            outputTSV.write(f'{str(args.inputlog)}\t{linenum}\t{lat}\t{llg}\t{time}\n')
+
+    print(f"\nProcessed/Wrote {str(len(locations))} locations to: {args.output}\n")
     print("Exiting ...\n")
-    
+
 if __name__ == "__main__":
     main()
 

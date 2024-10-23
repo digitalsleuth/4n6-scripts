@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # samsung_gallery3d_trash_parser_v10.py = Python script to parse a Samsung com.sec.android.gallery3d's (v10) local.db trash table
 #
@@ -35,11 +35,11 @@ def main():
 
     args = parser.parse_args()
 
-    print("Running " + version_string + "\n")
-    
+    print(f"Running {version_string}\n")
+
     if not args.database or not args.output:
         parser.exit("ERROR - Input file or Output file NOT specified")
-    
+
     # Check DB file exists before trying to connect
     if path.isfile(args.database):
         dbcon = sqlite3.connect(args.database)
@@ -75,10 +75,8 @@ def main():
         __mimeType = restore_data["__mimeType"]
         __latitude = str(restore_data["__latitude"])
         __longitude = str(restore_data["__longitude"])
-        
-        # store each row returned    
+        # store each row returned
         entries.append((__absID, __absPath, __Title, __originPath, __originTitle, __deleteTimeStr, __cloudTimestampStr, __dateTakenStr, __size, __mimeType, __latitude, __longitude))
-        
         row = cursor.fetchone()
 
     cursor.close()
@@ -87,7 +85,6 @@ def main():
     # Write TSV report
     with open(args.output, "w") as outputTSV:
         outputTSV.write("__absID\t__absPath\t__Title\t__originPath\t__originTitle\t__deleteTime\t__cloudTimestamp\t__dateTaken\t__size\t__mimeType\t__latitude\t__longitude\n")
-        
         for entry in entries:
             __absID = entry[0]
             __absPath = entry[1]
@@ -101,11 +98,10 @@ def main():
             __mimeType = entry[9]
             __latitude = entry[10]
             __longitude = entry[11]
-            
             outputTSV.write(str(__absID + "\t" + __absPath + "\t" + __Title + "\t" + __originPath + "\t" + __originTitle + "\t" + __deleteTimeStr + \
                            "\t" + __cloudTimestampStr + "\t" + __dateTakenStr + "\t" + __size + "\t" + __mimeType + "\t" + __latitude + "\t" + __longitude + "\n"))
 
-    print("\nProcessed/Wrote " + str(len(entries)) + " entries to: " + args.output + "\n")
+    print(f"\nProcessed/Wrote {str(len(entries))} entries to: {args.output}\n")
     print("Exiting ...\n")
 
 

@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #
 # Python script to read input strings/paths from a text file (one per line) and prints out the equivalent Java hashcode
 # Author: cheeky4n6monkey@gmail.com
@@ -36,11 +36,10 @@ def main():
     group.add_argument("-u", dest="uppercase", action="store_true", default=False, help='(Optional) Converts input string to UPPER case before hashing')
     args = parser.parse_args()
 
-    print("Running " + version_string + "\n")
+    print(f"Running {version_string} \n")
 
     if not args.inputfile:
         parser.exit("ERROR - Input file NOT specified")
-    
     # Check input file exists before trying to read
     if not path.isfile(args.inputfile):
         print(args.inputfile + " - file does not exist!")
@@ -55,10 +54,9 @@ def main():
             if args.lowercase:
                 procstring = line.rstrip().lower()
             if args.uppercase:
-                procstring = line.rstrip().upper()    
+                procstring = line.rstrip().upper()
             print(str(procstring) + " = " + str(java_string_hashcode(procstring)))
-        
-        print("\nProcessed " + str(linenum) + " lines - Exiting ...")   
+        print(f"\nProcessed {str(linenum)} lines - Exiting ...")
 
 
 if __name__ == "__main__":

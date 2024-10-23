@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 # samsung_gallery3d_filesysmon_parser_v11.py = Python script to parse a Samsung com.sec.android.gallery3d's (v11) filesystem_monitor log table
 #
@@ -51,11 +51,9 @@ def decode_path(pathstring):
                 # error generated trying to decode, keep going
                 #print("exception = " + repr(e))
                 continue
-    
     if not found:
         print("ERROR! Failed to decode path")
-    
-    return(finalstredit)    
+    return(finalstredit)
 #end decode_path
 
 
@@ -67,11 +65,9 @@ def main():
 
     args = parser.parse_args()
 
-    print("Running " + version_string + "\n")
-    
+    print(f"Running {version_string}\n")
     if not args.database or not args.output:
         parser.exit("ERROR - Input file or Output file NOT specified")
-    
     # Check DB file exists before trying to connect
     if path.isfile(args.database):
         dbcon = sqlite3.connect(args.database)
@@ -94,9 +90,8 @@ def main():
         __data = row[4]
         event_type = row[5]
 
-        # store each row returned    
+        # store each row returned
         entries.append((_id, package, date_event_occurred, directory, __data, event_type))
-        
         row = cursor.fetchone()
 
     cursor.close()
@@ -105,7 +100,6 @@ def main():
     # Write TSV report
     with open(args.output, "w") as outputTSV:
         outputTSV.write("__id\tpackage\tdate_event_occurred(readable)\tdirectory\t__data\tevent_type\tbase64_decoded_data\n")
-        
         for entry in entries:
             __id = entry[0]
             package = entry[1]
@@ -114,15 +108,13 @@ def main():
             directory = entry[3]
             __data = entry[4]
             event_type = entry[5]
-            
             print("_id = " + str(__id))
             path_str = decode_path(__data)
             #print(path_str)
-            
             outputTSV.write(str(__id) + "\t" + package + "\t" + date_event_occurred_str + "\t" + directory + \
                 "\t" + __data + "\t" + event_type + "\t" + path_str + "\n")
 
-    print("\nProcessed/Wrote " + str(len(entries)) + " entries to: " + args.output + "\n")
+    print(f"\nProcessed/Wrote {str(len(entries))} entries to: {args.output}\n")
     print("Exiting ...\n")
 
 

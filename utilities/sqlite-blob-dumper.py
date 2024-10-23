@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 # sqlite-blob-dumper.py = Python3 script to dump BLOB fields from SQLite DBs
 #
 # Copyright (C) 2024 Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -46,7 +47,7 @@ def calculate_filename(table, colname, rowid, blob):
     elif (blob[0:11] == b'\x00\x00\x00\x14\x66\x74\x79\x70\x33\x67\x70'):
         ext = ".3gp" # as per https://en.wikipedia.org/wiki/3GP_and_3G2
     elif (blob[0:11] == "\x00\x00\x00\x20\x66\x74\x79\x70\x33\x67\x70"):
-        ext = ".3g2" # as per https://en.wikipedia.org/wiki/3GP_and_3G2       
+        ext = ".3g2" # as per https://en.wikipedia.org/wiki/3GP_and_3G2
     elif (blob[0:5] == b'\x23\x21\x41\x4D\x52'):
         ext = ".amr" # for iOS voicemail
 
@@ -80,7 +81,7 @@ def main():
     # Determine Primary Key (for ordering query by) and column names (for labelling)
     query = "PRAGMA table_info('" + args.table + "')"
     #print(query)
-    print("Searching table " + args.table + " for Primary Key ...") 
+    print("Searching table " + args.table + " for Primary Key ...")
     cursor = dbcon.cursor()
     cursor.execute(query)
     tableinforow = cursor.fetchone()
@@ -104,7 +105,7 @@ def main():
     if (pkname == ""):
         print("\nUnable to find Primary Key in DB ... Exiting")
         exit(-1)
-    else:   
+    else:
         print("\nPrimary Key detected is: " + pkname)
 
     if (len(columnnames) == 0):
@@ -121,20 +122,20 @@ def main():
             qcolnames += columnnames[colidx] # Last colname doesn't need a comma
         else:
             qcolnames += columnnames[colidx] + ", "
-            
+
     print("Detected BLOB columns = " + qcolnames)
 
-    # Query grabs the primary key field and each BLOB column. 
+    # Query grabs the primary key field and each BLOB column.
     # It orders by primary key (ass-umes there's only 1 PK)
     query = "SELECT " + pkname + ", " + qcolnames + " FROM " + args.table + " ORDER BY " + pkname + ";"
     print("\nCalling Query: " + query +"\n")
 
     # https://stackoverflow.com/questions/23508153/python-encoding-could-not-decode-to-utf8/23509002#23509002
-    dbcon.text_factory = bytes # to handle non-text SQLite responses eg if BLOB is returned 
+    dbcon.text_factory = bytes # to handle non-text SQLite responses eg if BLOB is returned
     cursor = dbcon.cursor()
     cursor.execute(query)
 
-    # Row order will be pk value then BLOB column(s) 
+    # Row order will be pk value then BLOB column(s)
     row = cursor.fetchone()
     while row:
         try:
@@ -144,12 +145,10 @@ def main():
                 blobcolidx = columnnames.index(col) + 1 # Get query row index for this blob col
                 # Need to add 1 to account for PK field (at row[0])
                 # Arg order is tablename, colname, PK rowid, blob
-                
                 if(row[blobcolidx] is None): # Its possible the returned col is NULL
                     #print("BLOB is none!")
                     continue # skip to next col
-                name = calculate_filename(args.table, col, str(row[0]), row[blobcolidx]) 
-                
+                name = calculate_filename(args.table, col, str(row[0]), row[blobcolidx])
                 fullname = os.path.join(args.outputdir, name)
                 if (row[blobcolidx] is not None):
                     print("Extracting BLOB to ... " + fullname)
@@ -172,5 +171,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    

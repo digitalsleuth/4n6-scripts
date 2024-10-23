@@ -1,4 +1,4 @@
-
+#! /usr/bin/env python3
 # sqlite-base64-decode.py = Python script to extract/decode base64 field from SQLite DB
 #
 # Copyright (C) 2015 Adrian Leong (cheeky4n6monkey@gmail.com)
@@ -34,7 +34,7 @@ import base64
 from os import path
 
 version_string = "sqlite-base64-decode v2015-06-27"
-print "Running " + version_string
+print("Running " + version_string)
 
 parser = argparse.ArgumentParser(description='Extracts/decodes a base64 field from a SQLite DB')
 parser.add_argument("db", help='Sqlite DB filename')
@@ -51,7 +51,7 @@ else:
     print(args.db + " file does not exist!")
     exit(-1)
 
-# Determine Primary Key (for ordering query by), column names (for printing) and 
+# Determine Primary Key (for ordering query by), column names (for printing) and
 # base64 column index
 query = "pragma table_info("+ args.table +")"
 cursor = dbcon.cursor()
@@ -74,16 +74,16 @@ while (row):
     row = cursor.fetchone()
 # ends while row
 
-if (pkname is ""):
+if (pkname == ""):
     print("Unable to find Primary Key in DB ... Exiting")
     exit(-1)
-else:   
+else:
     print("Primary Key name is: " + pkname)
 
 if (b64field_idx == -1):
     print("Unable to find given Base64 Fieldname in DB ... Exiting")
     exit(-1)
-else:   
+else:
     print("Base64 Fieldname index is: " + str(b64field_idx))
 
 # Print the output header
@@ -109,17 +109,17 @@ while row:
     #print(row)
     rowstring = "" # printed for each row
     result = row[b64field_idx] # set to base64 field value
-    
+
     for j in range(numcols):
         rowstring += str(row[j]) + "\t" # Need to print each column (tab separated)
-         
+
     try:
         # Now we can Base64 decode however many times they want
         for j in range(args.b64count) :
             temp = base64.decodestring(result)
             result = temp
         rowstring += result # Add the decoded result to the output string
-        
+
     except :
 #        print("Bad Base64 Decode for " + origresult + " ... continuing on")
 #        exctype, value = sys.exc_info()[:2]
@@ -131,11 +131,11 @@ while row:
 
     print(rowstring) # normal print
     row = cursor.fetchone()
-        
+
 cursor.close()
 dbcon.close()
 
-print "\nExiting ..."
+print("\nExiting ...")
 exit(0)
 
 
