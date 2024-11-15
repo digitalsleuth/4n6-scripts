@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-# gRecordsActivity_json_date.py = Python script reads Google Takeout "Records.json" and processes Detected Activity entries
+# gRecordsActivity_ijson_date.py = Python script reads Google Takeout "Records.json" and processes Detected Activity entries
 #
 # Author: cheeky4n6monkey@gmail.com
 #
@@ -14,17 +14,17 @@
 # v2023-06-14 Added error handling for missing source, added osLevel + batteryCharging
 #
 # Developed/tested on Ubuntu 20x64 running Python 3.8
-# Requires json package [pip3 install json]
+# Requires ijson package [pip3 install ijson]
 #
 # Usage Example:
-# python gRecordsActivity_json_date.py -i "Records.json" -o output_dir -a start_isodate -b end_isodate
+# python gRecordsActivity_ijson_date.py -i "Records.json" -o output_dir -a start_isodate -b end_isodate
 #
 
 import argparse
 import os
-import json
+import ijson
 
-version_string = "gRecordsActivity_json_date.py v2023-06-14"
+version_string = "gRecordsActivity_ijson_date.py v2023-06-14"
 
 def main():
     usagetxt = " %(prog)s [-i input_file -o output_dir -a start_isodate -b end_isodate]"
@@ -53,7 +53,7 @@ def main():
     folder_dict = {} # dict of element lists containing tuples. dict keyed by isodate yyyy-mm-dd
     # read input JSON file
     with open(args.input) as inputdata:
-        element_items = json.items(inputdata, 'locations.item')
+        element_items = ijson.items(inputdata, 'locations.item')
         #print(list(element_items))
         for element in element_items: # each element
             #print("\n" + str(element))
