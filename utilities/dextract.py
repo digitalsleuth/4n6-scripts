@@ -275,7 +275,7 @@ def extract_unix13digdec(f):
         unix_decimal_13_int = int(unix_decimal_13_string) # now convert string "01170245478000" to decimal int
     except:
        print("Bad int cast in extract_unix13digdec")
-        unix_decimal_13_int = -1
+       unix_decimal_13_int = -1
     return(unix_decimal_13_int)
 #ends extract_unix13digdec
 
@@ -350,13 +350,13 @@ def extract_defined_string(field, f, filename):
             value = struct.unpack(pattern, f.read(size))[0]
             # ensure string is printable
             if (all(c in string.printable for c in value)):
-                print filename + ":" + str(fieldoffset) + ", defined str field = " + field + ", value = " + str(value)
+                print(filename + ":" + str(fieldoffset) + ", defined str field = " + field + ", value = " + str(value))
             else:
                 value = ""
-                print filename + ":" + str(fieldoffset) + " " + field + " is unprintable"
+                print(filename + ":" + str(fieldoffset) + " " + field + " is unprintable")
         except:
             value = ""
-            print filename + ":" + str(fieldoffset) + " " + field + " - Error extracting string"
+            print(filename + ":" + str(fieldoffset) + " " + field + " - Error extracting string")
     elif ( (type_dict[field].upper() == "UTF16BE") or (type_dict[field].upper() == "UTF16LE") ):
         data = f.read(size)
         decodestr = ""
@@ -367,12 +367,12 @@ def extract_defined_string(field, f, filename):
         try:
             value = data.decode(decodestr)
             if (all(c in string.printable for c in value)):
-                print filename + ":" + str(fieldoffset) + ", defined " + decodestr + " str field = " + field + ", value = " + str(value)
+                print(filename + ":" + str(fieldoffset) + ", defined " + decodestr + " str field = " + field + ", value = " + str(value))
             else:
                 value = ""
-                print filename + ":" + str(fieldoffset) + " " + field + " is unprintable"
+                print(filename + ":" + str(fieldoffset) + " " + field + " is unprintable")
         except:
-            print filename + ":" + str(fieldoffset) + " " + field + " - Error extracting " + decodestr + " str field"
+            print(filename + ":" + str(fieldoffset) + " " + field + " - Error extracting " + decodestr + " str field")
             value = ""
     return(value)
 #ends extract_defined_string
@@ -387,13 +387,13 @@ def extract_deferred_string(field, f, size, filename):
             value = struct.unpack(pattern, f.read(size))[0]
             # ensure string is printable
             if (all(c in string.printable for c in value)):
-                print filename + ":" + str(fieldoffset) + ", deferred str field = " + field + ", value = " + str(value)
+                print(filename + ":" + str(fieldoffset) + ", deferred str field = " + field + ", value = " + str(value))
             else:
                 value = ""
-                print filename + ":" + str(fieldoffset) + " " + field + " is unprintable"
+                print(filename + ":" + str(fieldoffset) + " " + field + " is unprintable")
         except:
             value = ""
-            print filename + ":" + str(fieldoffset) + " " + field + " - Error extracting deferred string"
+            print(filename + ":" + str(fieldoffset) + " " + field + " - Error extracting deferred string")
     elif ( (type_dict[field].upper() == "UTF16BE") or (type_dict[field].upper() == "UTF16LE") ):
         data = f.read(size)
         decodestr = ""
@@ -404,12 +404,12 @@ def extract_deferred_string(field, f, size, filename):
         try:
             value = data.decode(decodestr)
             if (all(c in string.printable for c in value)):
-                print filename + ":" + str(fieldoffset) + ", deferred " + decodestr + " str field = " + field + ", value = " + str(value)
+                print(filename + ":" + str(fieldoffset) + ", deferred " + decodestr + " str field = " + field + ", value = " + str(value))
             else:
                 value = ""
-                print filename + ":" + str(fieldoffset) + " " + field + " is unprintable"
+                print(filename + ":" + str(fieldoffset) + " " + field + " is unprintable")
         except:
-            print filename + ":" + str(fieldoffset) + " " + field + " - Error extracting deferred "+ decodestr + " str field"
+            print(filename + ":" + str(fieldoffset) + " " + field + " - Error extracting deferred "+ decodestr + " str field")
             value = ""
     return(value)
 #ends extract_deferred_string
@@ -427,7 +427,7 @@ def extract_nullterm_string(field, f, filename):
             tmp = f.read(1)
             if ((tmp != "\x00") and (tmp in string.printable)):
                 value += tmp
-        print filename + ":" + str(fieldoffset) + ", nullterm str field = " + field + ", value = " + str(value)
+        print(filename + ":" + str(fieldoffset) + ", nullterm str field = " + field + ", value = " + str(value))
     elif ( (type_dict[field].upper() == "UTF16BE") or (type_dict[field].upper() == "UTF16LE") ):
         stringdata = ""
         decodestr = ""
@@ -443,12 +443,12 @@ def extract_nullterm_string(field, f, filename):
         try:
             value = stringdata.decode(decodestr)
             if (all(c in string.printable for c in value)):
-                print filename + ":" + str(fieldoffset) + ", nullterm " + decodestr + " str field = " + field + ", value = " + str(value)
+                print(filename + ":" + str(fieldoffset) + ", nullterm " + decodestr + " str field = " + field + ", value = " + str(value))
             else:
                 value = ""
-                print filename + ":" + str(fieldoffset) + " " + field + " is unprintable"
+                print(filename + ":" + str(fieldoffset) + " " + field + " is unprintable")
         except:
-            print filename + ":" + str(fieldoffset) + " " + field + " - Error extracting nullterm " + decodestr + " str field"
+            print(filename + ":" + str(fieldoffset) + " " + field + " - Error extracting nullterm " + decodestr + " str field")
             value = ""
     return(value)
 #ends extract_nullterm_string
@@ -503,7 +503,7 @@ def parse_record(f, hit):
                 if (tsvoutput):
                     of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" + str(value) + "\t\n")
             else:
-                print num_types_dict[field] + " is unknown and cannot be used to extract the " + field + " field ... skipping"
+                print(num_types_dict[field] + " is unknown and cannot be used to extract the " + field + " field ... skipping")
         elif ( (num_types_dict[field].isdigit()) and ((type_dict[field].upper() == "S") or (type_dict[field].upper() == "UTF16BE") or
                 (type_dict[field].upper() == "UTF16LE")) ):
             # Handle strings with numeric sizes declared
@@ -514,7 +514,7 @@ def parse_record(f, hit):
             # Handle 6 byte ms since 1JAN1970.
             value = extract_unix48ms(f, type_dict[field].startswith("<"))
             datefield = calc_date(value, field)
-            print filename + ":" + str(fieldoffset) + ", UNIX48MS field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
+            print(filename + ":" + str(fieldoffset) + ", UNIX48MS field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield)
             if (tsvoutput):
                 of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
@@ -522,7 +522,7 @@ def parse_record(f, hit):
             # Handle 10 digit decimal secs since 1JAN1970. eg 0x1170245478
             value = extract_unix10digdec(f)
             datefield = calc_date(value, field)
-            print filename + ":" + str(fieldoffset) + ", UNIX10DIGDEC field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
+            print(filename + ":" + str(fieldoffset) + ", UNIX10DIGDEC field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield)
             if (tsvoutput):
                 of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
@@ -530,7 +530,7 @@ def parse_record(f, hit):
             # Handle 13 digit decimal ms since 1JAN1970. eg 0x1170245478000
             value = extract_unix13digdec(f)
             datefield = calc_date(value, field)
-            print filename + ":" + str(fieldoffset) + ", UNIX13DIGDEC field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
+            print(filename + ":" + str(fieldoffset) + ", UNIX13DIGDEC field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield)
             if (tsvoutput):
                 of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
@@ -538,7 +538,7 @@ def parse_record(f, hit):
             # Handle 6 byte 12 digit BCD date eg 071231125423 = 31DEC2007T12:54:23
             value = extract_BCD12(f)
             datefield = calc_date(value, field)
-            print filename + ":" + str(fieldoffset) + ", BCD12 field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
+            print(filename + ":" + str(fieldoffset) + ", BCD12 field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield)
             if (tsvoutput):
                 of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
@@ -546,14 +546,14 @@ def parse_record(f, hit):
             # Handle 7 byte 14 digit BCD date eg 020071231125423 = 31DEC2007T12:54:23
             value = extract_BCD14(f)
             datefield = calc_date(value, field)
-            print filename + ":" + str(fieldoffset) + ", BCD14 field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
+            print(filename + ":" + str(fieldoffset) + ", BCD14 field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield)
             if (tsvoutput):
                 of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
         elif ("DOSDATE" in type_dict[field].upper()):
             value = extract_DOSdate(f, type_dict[field].startswith("<"))
             datefield = calc_date(value, field)
-            print filename + ":" + str(fieldoffset) + ", DOSDATE field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield
+            print(filename + ":" + str(fieldoffset) + ", DOSDATE field = " + field + ", value = " + str(value) + ", interpreted value = " + datefield)
             if (tsvoutput):
                 of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                          str(value) + "\t" + datefield + "\n")
@@ -567,20 +567,20 @@ def parse_record(f, hit):
                 #print "extracted field = " + field + "... value = " + str(value)
             except:
                print("Error extracting data! Offset = " + str(fieldoffset) + ", Field = " + field)
-                print patn
+                print(patn)
                 return False # bailout of function. We're getting errors for the simplest case.
             # output 32 bit int dates
             if ("OSX32" in type_dict[field].upper() or "UNIX32" in type_dict[field].upper() or
                 "GPS32" in type_dict[field].upper() or "AOL32" in type_dict[field].upper() or
                 "HFS32" in type_dict[field].upper()):
                 datefield = calc_date(value, field)
-                print filename + ":" + str(fieldoffset) + ", field = " + field + ", value = " + str(value) + ", interpreted date value = " + datefield
+                print(filename + ":" + str(fieldoffset) + ", field = " + field + ", value = " + str(value) + ", interpreted date value = " + datefield)
                 if (tsvoutput):
                     of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                              str(value) + "\t" + datefield + "\n")
             else:
                 # output other non-string / non-date values (ints, floats)
-                print filename + ":" + str(fieldoffset) + ", field = " + field + ", value = " + str(value)
+                print(filename + ":" + str(fieldoffset) + ", field = " + field + ", value = " + str(value))
                 if (tsvoutput):
                     of.write(filename + "\t" + str(fieldoffset) + "\t" + field + "\t" +
                              str(value) + "\t\n")
@@ -589,7 +589,7 @@ def parse_record(f, hit):
 
 # ==============================================================================
 # Main
-print "Running " + version_string + "\n"
+print("Running " + version_string + "\n")
 
 usage = "\n" + "Usage#1: %prog -d defnfile -f inputfile\n" + "Usage#2: %prog -d defnfile -f inputfile -a 350 -z 428 -o outputfile"
 
@@ -626,7 +626,7 @@ tsvoutput = options.tsvfile
 startoffset = options.startoffset
 
 fileinfo = os.stat(filename)
-print "Input file " + filename + " is %d bytes" % fileinfo.st_size + "\n"
+print("Input file " + filename + " is %d bytes" % fileinfo.st_size + "\n")
 if (options.endoffset == -1): # default case ie end offset "z" was not specified
     endoffset = fileinfo.st_size
 else:
@@ -694,7 +694,7 @@ f.close()
 if (tsvoutput):
     of.close()
 
-print "\nExiting ..."
+print("\nExiting ...")
 exit(0)
 
 # Ends Main
