@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # Python script to parse IPM.MMS messages from a Windows 8.10 phone's store.vol file
 # Intended to be used in conjunction with "wp8-1-mms-filesort.py"
 #
@@ -326,7 +326,7 @@ for hit in sms_hitlist:
         print("Exception type = ", exctype, ", value = ", value)
         continue  # skip hit if bad read
 
-    if phonefield is "":
+    if phonefield == "":
         print(
             "No phone number detected for this Recipient! Skipping hit at "
             + hex(hit).rstrip("L")
@@ -450,7 +450,7 @@ for hit in ipmmms_hitlist:
         print("Exception type = ", exctype, ", value = ", value)
         continue  # skip hit if error
 
-    if phonefield is "":
+    if phonefield == "":
         # if no number field, this is a sent MMS so find Timestamp3 which is 0xB (11 dec) bytes from last read byte
         # print("\nNo phone number detected in Message record at " + hex(hit).rstrip("L") + "\n")
 

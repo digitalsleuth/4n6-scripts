@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 """
 Author: Adrian Leong (cheeky4n6monkey@gmail.com)

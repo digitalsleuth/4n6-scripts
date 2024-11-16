@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # Python script to chronologically list (last modified) MMS .dat files from an exported Windows Phone 8.10 directory
 # ie from DATA partition: /SharedData/Comms/Unistore/data/7
 # It will also list the .dat file's SHA256 hash, size and type.

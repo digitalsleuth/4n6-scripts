@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 
 # Python3 script to extracts/convert IPA strings from given Garmin 56LM voice log to WAV files
 # e.g. from FAT32/Voice/logs/vpm_log_all.log

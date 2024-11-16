@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 
 # Python3 script to query iOS 14 MapsSync_0.0.1 and extract selected BLOBs
 #
