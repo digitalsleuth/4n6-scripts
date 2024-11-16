@@ -259,7 +259,7 @@ def extract_unix10digdec(f):
         unix_decimal_10_int = int(unix_decimal_10_string) # now convert string "1170245478" to decimal int
     except:
        print("Bad int cast in extract_unix10digdec")
-        unix_decimal_10_int = -1
+       unix_decimal_10_int = -1
     return(unix_decimal_10_int)
 #ends extract_unix10digdec
 
