@@ -417,8 +417,8 @@ for key in sorted_messages_keys:
     # GoogleMap URL eg http://maps.google.com/maps?q=37.771008,+-122.41175+%28You+can+insert+your+text+here%29&iwloc=A&hl=en
     # percent encoding example at http://www.saltycrane.com/blog/2008/10/how-escape-percent-encode-url-python/
     latlongurl = "NA"
-    if (messagesdict[key][MESGS_LAT_IDX] is not "NA") and (
-        messagesdict[key][MESGS_LONG_IDX] is not "NA"
+    if (messagesdict[key][MESGS_LAT_IDX] != "NA") and (
+        messagesdict[key][MESGS_LONG_IDX] != "NA"
     ):
         latlongurl = (
             "http://maps.google.com/maps?q="

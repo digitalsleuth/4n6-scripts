@@ -31,7 +31,7 @@ import sys
 from optparse import OptionParser
 import datetime
 import base64
-import urlparse
+import urllib.parse as urlparse
 
 version_string = "google-ei-time.py v2014-10-10"
 usage = "%prog -e EITERM -q OR %prog -u URL -q"
@@ -126,6 +126,6 @@ except:
 if not (options.quiet):
     print("Human readable timestamp (UTC) = " + datetimestr)
 else:
-    print datetimestr
+    print(datetimestr)
 
 exit(0)
